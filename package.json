@@ -1,0 +1,23 @@
+{
+  "name": "pinapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/martinambrueso/node-pinapp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/martinambrueso/node-pinapp/issues"
+  },
+  "homepage": "https://github.com/martinambrueso/node-pinapp#readme",
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}
