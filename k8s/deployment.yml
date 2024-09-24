@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pinapp-node-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pinapp-node-test
+  template:
+    metadata:
+      labels:
+        app: pinapp-node-test
+    spec:
+      containers:
+      - name: pinapp-node-test
+        image: tokn1/node_test:latest tokn1/node_test:latest  
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NODE_ENV
+          value: "production"
