@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: pinapp-node-test
-        image: tokn1/node_test:latest tokn1/node_test:latest  
+        image: tokn1/node_test:latest
         ports:
         - containerPort: 3000
         env:
