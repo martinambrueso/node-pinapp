@@ -31,16 +31,12 @@ pipeline {
             steps {
                 container('node') {
                     git branch: 'main', url: 'https://github.com/martinambrueso/node-pinapp.git'
-                    sh 'ls -la'
-                    sh 'pwd'
                 }
             }
         }
-        stage('Run Docker') {
+        stage('Build image') {
             steps {
-                container('docker') {
-                    sh 'docker -v'
-                    
+                container('docker') {                    
                     withCredentials([usernamePassword(credentialsId: 'docker_auth', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh '''
                             echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
@@ -54,12 +50,9 @@ pipeline {
                 }
             }
         }
-        stage('Run Node.js') {
+        stage('Deploy') {
             steps {
                 container('node') {
-                    sh 'node -v'
-                    sh 'ls -la'
-                    sh 'pwd'
                     sh 'kubectl apply -f k8s/deployment.yml'
                     sh 'kubectl apply -f k8s/service.yml'
                     sh 'kubectl get pods'
