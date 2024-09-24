@@ -19,6 +19,14 @@ pipeline {
                   volumeMounts:
                   - name: docker-sock
                     mountPath: /var/run/docker.sock
+                - name: trivy
+                  image: aquasec/trivy:latest
+                  command:
+                  - cat
+                  tty: true
+                  volumeMounts:
+                  - name: docker-sock
+                    mountPath: /var/run/docker.sock
                 volumes:
                 - name: docker-sock
                   hostPath:
@@ -36,7 +44,7 @@ pipeline {
         }
         stage('Build image') {
             steps {
-                container('docker') {                    
+                container('docker') {
                     withCredentials([usernamePassword(credentialsId: 'docker_auth', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh '''
                             echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
@@ -45,7 +53,19 @@ pipeline {
 
                     sh 'docker build -t tokn1/node_test:latest .'
                     sh 'docker tag tokn1/node_test:latest tokn1/node_test:latest'
-
+                }
+            }
+        }
+        stage('Trivy Scan') {
+            steps {
+                container('trivy') {
+                    sh 'trivy image --exit-code 1 --severity HIGH,CRITICAL tokn1/node_test:latest'
+                }
+            }
+        }
+        stage('Push image') {
+            steps {
+                container('docker') {
                     sh 'docker push tokn1/node_test:latest'
                 }
             }
